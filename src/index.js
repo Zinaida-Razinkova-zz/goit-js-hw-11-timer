@@ -18,10 +18,10 @@ class CountdownTimer {
       const currentTime = Date.now();
       this.updateTimer(0);
 
-      const deltaTime = this.targetDate - currentTime;
-      this.updateTimer(deltaTime);
+      const time = this.targetDate - currentTime;
+      this.updateTimer(time);
 
-      if (deltaTime <= 0) {
+      if (time <= 0) {
         this.stop();
       }
     }, 1000);
@@ -34,17 +34,26 @@ class CountdownTimer {
   }
 
   updateTimer(time) {
-    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-    const hours = this.pad(
+    const secondDays = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const secondHours = this.pad(
       Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
     );
-    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+    const secondMins = this.pad(
+      Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)),
+    );
 
-    refs.days.textContent = `${days}`;
-    refs.hours.textContent = `${hours}`;
-    refs.mins.textContent = `${mins}`;
-    refs.secs.textContent = `${secs}`;
+    const secondSecs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+
+    return secondDays, secondHours, secondMins, secondSecs;
+  }
+
+  refsTextContent() {
+    let newTime = this.updateTimer();
+
+    refs.days.textContent = `${newTime.secondDays}`;
+    refs.hours.textContent = `${newTime.secondHours}`;
+    refs.mins.textContent = `${newTime.secondMins}`;
+    refs.secs.textContent = `${newTime.secondSecs}`;
   }
 
   pad(value) {
