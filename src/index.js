@@ -17,7 +17,6 @@ class CountdownTimer {
     this.intervalId = setInterval(() => {
       const currentTime = Date.now();
       this.updateTimer(0);
-
       const time = this.targetDate - currentTime;
       this.updateTimer(time);
 
@@ -29,7 +28,9 @@ class CountdownTimer {
 
   stop() {
     clearInterval(this.intervalId);
+    clearInterval(this.intervalId2);
     this.intervalId = null;
+    this.intervalId2 = null;
     this.updateTimer(0);
   }
 
@@ -44,16 +45,20 @@ class CountdownTimer {
 
     const secondSecs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-    return secondDays, secondHours, secondMins, secondSecs;
+    return { secondDays, secondHours, secondMins, secondSecs };
   }
 
   refsTextContent() {
-    let newTime = this.updateTimer();
+    this.intervalId2 = setInterval(() => {
+      const currentTime = Date.now();
+      const time = this.targetDate - currentTime;
+      let newTime = this.updateTimer(time);
 
-    refs.days.textContent = `${newTime.secondDays}`;
-    refs.hours.textContent = `${newTime.secondHours}`;
-    refs.mins.textContent = `${newTime.secondMins}`;
-    refs.secs.textContent = `${newTime.secondSecs}`;
+      refs.days.textContent = `${newTime.secondDays}`;
+      refs.hours.textContent = `${newTime.secondHours}`;
+      refs.mins.textContent = `${newTime.secondMins}`;
+      refs.secs.textContent = `${newTime.secondSecs}`;
+    }, 1000);
   }
 
   pad(value) {
@@ -68,3 +73,4 @@ const Timer = new CountdownTimer({
 
 // Начало работы таймера
 Timer.start();
+Timer.refsTextContent();
